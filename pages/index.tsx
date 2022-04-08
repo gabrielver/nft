@@ -1,4 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
+import React from 'react';
+import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,57 +12,48 @@ interface Props{
 }
 
 const Home = ({collections}: Props) => {
+
+  //Auth
+  const connectWithMetamask = useMetamask();
+    const address = useAddress();
+    const disconnect = useDisconnect();
+
   return (
-    <div className='mx-auto flex min-h-screen max-w-7xl flex-col py-20 px-10 2xl:px-0 '>
+    <div className='mx-auto flex min-h-screen max-w-7xl flex-col pt-20 px-10 2xl:px-20 bg-gradient-to-br from-blue-900 to-black lg:col-span-4 lg:max-w-full  '>
       <Head>
         <title>NFT Drop</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-    {/* <header>
-    <div className=' flex  justify-between items-center p-5 bg-black bg-opacity-25' >
-      <h1 className='text-white text-4xl font-bold'>Welcome to the NFT Drop challenge</h1>
-      <button className='p-2 bg-slate-50 rounded-xl font-bold text-cyan-600 shadow-xl '>Sign in</button>
-      </div>
-    </header>
-      <main>
-      <div className='flex flex-col lg:flex-row justify-center items-center mt-40 lg:pb-40 '>
-      <div className='p-5'>
-        <h2 className='text-5xl font-bold text-white pb-5'>Our Current NFT Drop</h2>
-        <p className='text-3xl font-bold text-white'>More Coming soon ...</p>
-      </div>
-      <div className='flex '>
-        <div className='flex  flex-col lg:flex-row  '>
-          <a className='p-5 m-5 bg-neutral-900 rounded-xl shadow-xl' href="./nft/NFTDropPage"><img className='w-60 h-80 object-cover pb-10' src="https://links.papareact.com/bdy" alt="" /></a>
-          <a className='p-5 m-5 bg-neutral-900 rounded-xl shadow-xl' href=""><img className='w-60 h-80 object-cover pb-10' src="https://imgs.search.brave.com/f2XVtiL_VOq-5XjG-aDo8ycwYsd4i7RJNN2HIeNVH9g/rs:fit:768:758:1/g:ce/aHR0cHM6Ly9qb2V0/aGVib3JlZGFwZS5j/b20vd3AtY29udGVu/dC91cGxvYWRzLzIw/MjEvMDcvQVBFNEFQ/RS03Njh4NzU4Lmpw/Zw" alt="" /></a>
-          <a className='p-5 m-5 bg-neutral-900 rounded-xl shadow-xl' href=""><img className='w-60 h-80 object-cover pb-10' src="https://imgs.search.brave.com/hoV7XqIgHt4a0_HJuSMMyHxVZ6Q4bjtZj3oM1Y9wF4Y/rs:fit:1050:550:1/g:ce/aHR0cHM6Ly9zdGF0/aWMwMS5ueXQuY29t/L2ltYWdlcy8yMDIx/LzAzLzExL2FydHMv/MTFuZnQtZXhwbGFp/bi0xLzExbmZ0LWV4/cGxhaW4tMS1mYWNl/Ym9va0p1bWJvLmpw/Zw" alt="" /></a>
-          <a className='p-5 m-5 bg-neutral-900 rounded-xl shadow-xl' href=""><img className='w-60 h-80 object-cover pb-10' src="https://imgs.search.brave.com/qUDJ3Wk3iGmb_tiZPyb0FxiOOSQI_DGVZdR08wUYFAA/rs:fit:768:842:1/g:ce/aHR0cHM6Ly93d3cu/Z29kdGFpbC5qcC93/cC93cC1jb250ZW50/L3VwbG9hZHMvMjAy/MC8wNi9FWjJDRE40/VThBRXlKWEstNzY4/eDg0Mi5qcGVn" alt="" /></a>
-        </div>
-        
-      </div>
-      </div>
-      </main> */}
-       <h1 className='mb-10 text-4xl font-extralight'>
+      <header  className='flex items-center justify-between blur-0'>
+      <h1 className='mb-10 text-4xl font-bold text-white'>
                     The{' '}
-                    <span className='font-extrabold underline decoration-pink-600/50'> 
-                    PAPAFAM 
+                    <span className='font-extrabold underline decoration-pink-500'> 
+                    Very Best Web 3.0
                     </span>{' '}
                      NFT Market Place
                 </h1>
-      <main className='bg-slate-100 p-10 shadow-xl shadow-rose-400/20 '>
+                <button onClick={() =>  address ? disconnect() :  connectWithMetamask() } className='rounded-full bg-black shadow shadow-pink-500 text-white px-4 py-2 text-xs font-bold lg:px-5 lg:py-3 lg:text-base'>{address ? 'Sign Out' : 'Sign In'}</button>
+      </header>
+      <p className='text-xl text-gray-300 pb-8'>Check our collections of newly arrived NFT ... more coming</p>
+      
+      <main className='bg-black p-10 rounded-xl  shadow-2xl shadow-rose-400/20 '>
         <div className='grid space-x-3 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'>
           {collections.map(collection => (
             <Link href={`/nft/${collection.slug.current}`}>
             <div className='flex flex-col items-center cursor-pointer transition-all duration-200 hover:scale-105'>
-            <img className='h-96 w-60 rounded-2xl object-cover' src={urlFor(collection.mainImage).url()} alt="mainImage" />
+            <img className='h-96 w-60 rounded-2xl object-cover shadow-2xl shadow-rose-400/20 transition-all duration-200 hover:shadow-rose-600/70' src={urlFor(collection.mainImage).url()} alt="mainImage" />
             <div className='p-5'>
-              <h2 className='text-3xl'>{collection.title}</h2>
-              <p className='mt-2 text-sm text-gray-400'>{collection.description}</p>
+              <h2 className=' text-3xl font-bold text-white text-center'>{collection.title}</h2>
+              <p className='mt-2 text-md text-center text-gray-400'>{collection.description}</p>
             </div>
           </div>
           </Link>
           ))}
         </div>
       </main> 
+      <div className='flex justify-center items-baseline content-center my-10 py-5 bg-pink-500 bg-opacity-20 rounded-xl'>
+        <p className='font-extrabold text-black '>MADE BY GAB</p>
+      </div>
     </div>
   )
 }
